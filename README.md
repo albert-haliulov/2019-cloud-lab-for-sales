@@ -37,7 +37,7 @@
 Рисунок 4.
 
 
-- Далее вы увидите страницу с описанием настроек для подключения (рис. 5), они понадобятся на следующих этапах.
+- Далее вы увидете страницу с описанием настроек для подключения (рис. 5), они понадобятся на следующих этапах.
 
 ![Cluster access commands](./images/cluster-access-commands.png)
 Рисунок 5.
@@ -64,27 +64,24 @@ cd 2019-cloud-lab-for-sales
 
 - В папке находится файл с именем `Dockerfile` следующего содержания:
 ````
-FROM node:8-stretch
+FROM node:8
 
 # Change working directory
 WORKDIR "/app"
 
-# Update packages and install dependency packages for services
-RUN apt-get update \
- && apt-get dist-upgrade -y \
- && apt-get clean \
- && echo 'Finished installing dependencies'
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
 
-# Install npm production packages
-COPY package.json /app/
-RUN cd /app; npm install --production
+RUN npm install
+# If you are building your code for production
+# RUN npm ci --only=production
 
-COPY . /app
+# Bundle app source
+COPY . .
 
-ENV NODE_ENV production
-ENV PORT 3000
-
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["npm", "start"]
 ````
@@ -197,6 +194,7 @@ NAME           STATUS    AGE       VERSION
 ## Этап 4. Установка и запуск приложения в IBM Cloud.
 
 - В папке находится файл с именем `demoapp.yaml` следующего содержания:
+
 ````
 apiVersion: apps/v1
 kind: Deployment
@@ -218,7 +216,7 @@ spec:
       - name: demoapp-container
         image: us.icr.io/cloudlab2019/demoapp:1.0
         ports:
-        - containerPort: 3000
+        - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
@@ -230,12 +228,12 @@ spec:
     app: demoapp
   ports:
   - protocol: TCP
-    port: 3000
-    targetPort: 3000
+    port: 8080
+    targetPort: 8080
     nodePort: 31000
 ````
 
-- Используя файл `demoapp.yaml` запустите установку приложения в ваш кластер:
+- Используя файл `demoapp.yaml` запустите установку приложения на ваш кластер:
 
 ````
 kubectl apply -f demoapp.yaml
@@ -263,12 +261,12 @@ NAME              CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 demoapp-service   172.21.197.105   <nodes>       8080:31000/TCP   3m
 ````
 
-- Чтобы открыть приложение, необходимо узнать публичный IP адрес вашего кластера. Для этого вернитесь в консоль IBM Cloud и откройте страницу созданного вами кластера. Публичный IP адрес указан на вкладке `Worker Nodes` как указано на картинке (рис.6).
+- Чтобы открыть приложение, необходимо узнать публичный IP адрес вашего кластера. Для этого вернитесь в консоль IBM Cloud и откройте страницу созданного вами кластера. Публичный IP адрес указан на вкладке `Worker Nodes` как на картинке (рис.6).
 
 ![Cluster public IP](./images/cluster-public-ip.png)
 Рисунок 6.
 
-Приложение доступно по публичному IP адресу и соответствующему порту, например, в данном случае demoapp доступен по адресу http://184.172.229.113:31000. Вам нужно указать адрес своего кластера вместо <Public_IP>: http://<Public_IP>:31000
+Приложение доступно по публичному IP адресу и соответствующему порту, например, в данном случае `demoapp` доступен по адресу http://184.172.229.113:31000. Вам нужно указать IP адрес своего кластера вместо <Public_IP> в адресе вызова приложения: http://<Public_IP>:31000
 
 ## На этом четвертый этап и вся лабораторная работа успешно завершены.
 

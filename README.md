@@ -5,7 +5,13 @@
 **Требования:**
 
  - Наличие аккаунта в IBM Cloud.
- - Установленные на локальной машине – Git, Docker, текстовый редактор.
+ - Установленные на локальной машине – Git, Docker, редактор кода.
+
+## Этап 0. Установка необходимых инструментов
+
+- Установка Git клиента: https://git-scm.com/book/ru/v2/Введение-Установка-Git
+- Установка Docker движка: https://docs.docker.com/v17.12/docker-for-mac/install/
+- Установка редактора Visual Studio Code: https://code.visualstudio.com 
 
 ## Этап 1. Создание кластера  Kubernetes в IBM Cloud.
 

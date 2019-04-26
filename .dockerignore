@@ -1,6 +1,4 @@
-README.md
-images
-demoapp.yaml
-Dockerfile
+.git
+.gitignore
 node_modules
-npm-debug.log
+.DS_Store

@@ -45,13 +45,13 @@
 
 ## Этап 2. Установка и запуск приложения в IBM Cloud.
 
-- В папке находится файл с именем `hello-kubernetes.yaml` следующего содержания:
+- В папке `kubernetes` находится файл с именем `hello-k8s.yaml` следующего содержания:
 
 ````
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-kubernetes
+  name: hello-k8s
 spec:
   type: NodePort
   ports:
@@ -59,30 +59,30 @@ spec:
     targetPort: 8080
     nodePort: 31000
   selector:
-    app: hello-kubernetes
+    app: hello-k8s
 ---
-apiVersion: apps/v1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: hello-kubernetes
+  name: hello-k8s
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hello-kubernetes
+      app: hello-k8s
   template:
     metadata:
       labels:
-        app: hello-kubernetes
+        app: hello-k8s
     spec:
       containers:
-      - name: hello-kubernetes
-        image: paulbouwer/hello-kubernetes:1.5
+      - name: hello-k8s
+        image: ahaliulov/hello-k8s:1.0.0
         ports:
         - containerPort: 8080
 ````
 
-- Используя файл `hello-kubernetes.yaml` запустите установку приложения на ваш кластер. Для этого необходимо:
+- Используя файл `hello-k8s.yaml` запустите установку приложения на ваш кластер. Для этого необходимо:
 1. Откройте консоль управления кластером нажав на кнопку `Kubernetes Dashboard` в правой части экрана 
 
 ![Kubernetes dashboard button](./images/kubernetes-dashboard-button.png)
@@ -91,7 +91,7 @@ spec:
 
 ![Create deployment](./images/create-deployment-button.png)
 
-3. В открывшуюся область необходимо скопировать содержимое файла `hello-kubernetes.yaml` и нажмите кнопку `Upload` для начала развертывания приложения.
+3. В открывшуюся область необходимо скопировать содержимое файла `hello-k8s.yaml` и нажмите кнопку `Upload` для начала развертывания приложения.
 
 ![Upload deployment file](./images/create-deployment-textarea.png)
 
@@ -117,6 +117,9 @@ spec:
 - Перейдите в консоль управления кластером и выберете `Deployments`, далее в списке справа от вашего приложения кликните на `...` и выберете `Scale`:
 
 ![scale-deployment-st1](./images/scale-deployment-st1.png)
+
+![scale-deployment-st1](./images/scale-deployment-st1_1.png)
+
 
 - Далее укажите количество экземпляров приложения, которое вы хотите получить в результате и нажмите `OK`:
 ![scale-deployment-st2](./images/scale-deployment-st2.png)

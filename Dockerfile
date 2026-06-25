@@ -28,4 +28,6 @@ RUN npm install
 # Bundle app source
 COPY app/ /usr/src/app
 
+EXPOSE 8080
+
 CMD [ "npm", "start" ]
